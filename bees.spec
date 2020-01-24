@@ -8,7 +8,7 @@ License:        GPL3
 URL:            https://github.com/Zygo/bees
 Source0:        https://github.com/Zygo/bees/archive/%{sha}.zip
 
-BuildRequires:  discount libuuid-devel btrfs-progs-devel
+BuildRequires:  make automake gcc gcc-c++ kernel-devel discount libuuid-devel btrfs-progs-devel
 Requires:       libuuid btrfs-progs
 
 Patch0001:      0001-build-optimizations.patch
