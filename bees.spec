@@ -31,7 +31,10 @@ export BEES_VERSION=%{version}
 
 
 %files
-
+/usr/sbin/beeds
+/usr/lib64/bees/bees
+/etc/bees/beesd.conf.sample
+/usr/lib/systemd/system/beesd@.service
 
 
 %changelog

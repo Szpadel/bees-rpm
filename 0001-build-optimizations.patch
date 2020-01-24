@@ -6,7 +6,7 @@ index 9c840c4..dab0384 100644
 -PREFIX ?= /usr
 -ETC_PREFIX ?= /etc
 +PREFIX ?= /usr/local
-+ETC_PREFIX ?= /usr/local/etc
++ETC_PREFIX ?= $(PREFIX)/etc
  LIBDIR ?= lib
  
  LIB_PREFIX ?= $(PREFIX)/$(LIBDIR)
