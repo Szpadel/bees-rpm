@@ -1,0 +1,64 @@
+diff --git a/Makefile b/Makefile
+index 9c840c4..dab0384 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,5 +1,5 @@
+-PREFIX ?= /usr
+-ETC_PREFIX ?= /etc
++PREFIX ?= /usr/local
++ETC_PREFIX ?= /usr/local/etc
+ LIBDIR ?= lib
+ 
+ LIB_PREFIX ?= $(PREFIX)/$(LIBDIR)
+diff --git a/makeflags b/makeflags
+index c5b6951..1ead286 100644
+--- a/makeflags
++++ b/makeflags
+@@ -1,8 +1,12 @@
+ # Default:
+-CCFLAGS = -Wall -Wextra -Werror -O3
++# CCFLAGS = -Wall -Wextra -Werror -O3
+ 
+ # Optimized:
+-# CCFLAGS = -Wall -Wextra -Werror -O3 -march=native
++CCFLAGS = -Wall -Wextra -Werror -O3 -march=native -fipa-pta -flto=4 -fno-common -fgraphite-identity -floop-nest-optimize -fuse-linker-plugin -fno-semantic-interposition -falign-functions=32
++LDFLAGS = $(CCFLAGS)
++AR=gcc-ar
++NM=gcc-nm
++RANLIB=gcc-ranlib
+ 
+ # Debug:
+ # CCFLAGS = -Wall -Wextra -Werror -O0 -ggdb
+diff --git a/scripts/beesd.in b/scripts/beesd.in
+index 216bc41..3e5d781 100755
+--- a/scripts/beesd.in
++++ b/scripts/beesd.in
+@@ -143,4 +143,4 @@ fi
+ MNT_DIR="$(realpath $MNT_DIR)"
+ 
+ cd "$MNT_DIR"
+-"$bees_bin" "${ARGUMENTS[@]}" $OPTIONS "$MNT_DIR"
++LD_LIBRARY_PATH=@PREFIX@/lib64 "$bees_bin" "${ARGUMENTS[@]}" $OPTIONS "$MNT_DIR"
+diff --git a/scripts/beesd@.service.in b/scripts/beesd@.service.in
+index b37273c..5269158 100644
+--- a/scripts/beesd@.service.in
++++ b/scripts/beesd@.service.in
+@@ -9,16 +9,15 @@ ExecStart=@PREFIX@/sbin/beesd --no-timestamps %i
+ CPUAccounting=true
+ CPUSchedulingPolicy=batch
+ CPUWeight=12
++Nice=19
++CPUQuota=20%
++IOWeight=1
+ IOSchedulingClass=idle
+-IOSchedulingPriority=7
+-IOWeight=10
+ KillMode=control-group
+ KillSignal=SIGTERM
+-MemoryAccounting=true
+-Nice=19
+ Restart=on-abnormal
+ StartupCPUWeight=25
+ StartupIOWeight=25
++IOAccounting=true
++MemoryAccounting=true
