@@ -27,12 +27,13 @@ Patch0001:      0001-build-optimizations.patch
 %install
 rm -rf $RPM_BUILD_ROOT
 export BEES_VERSION=%{version}
+export SYSTEMD_SYSTEM_UNIT_DIR=/usr/lib/systemd/system
 %make_install
 
 
 %files
-/usr/sbin/beeds
-/usr/lib64/bees/bees
+/usr/sbin/beesd
+/usr/lib/bees/bees
 /etc/bees/beesd.conf.sample
 /usr/lib/systemd/system/beesd@.service
 
