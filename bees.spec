@@ -1,5 +1,5 @@
 Name:           bees
-Version:        2019-11-28
+Version:        2019.11.28
 Release:        1%{?dist}
 Summary:        Best-Effort Extent-Same, a btrfs dedup agent
 
