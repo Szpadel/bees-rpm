@@ -26,6 +26,7 @@ Patch0001:      0001-build-optimizations.patch
 
 %install
 rm -rf $RPM_BUILD_ROOT
+export BEES_VERSION=%{version}
 %make_install
 
 
