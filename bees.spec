@@ -16,9 +16,9 @@ Patch0001:      0001-build-optimizations.patch
 
 
 %prep
+%autosetup
 ls
 %autopatch -p1
-%autosetup
 
 
 %build
