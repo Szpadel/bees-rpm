@@ -1,15 +1,3 @@
-diff --git a/Makefile b/Makefile
-index 9c840c4..dab0384 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,5 +1,5 @@
--PREFIX ?= /usr
--ETC_PREFIX ?= /etc
-+PREFIX ?= /usr/local
-+ETC_PREFIX ?= $(PREFIX)/etc
- LIBDIR ?= lib
- 
- LIB_PREFIX ?= $(PREFIX)/$(LIBDIR)
 diff --git a/makeflags b/makeflags
 index c5b6951..1ead286 100644
 --- a/makeflags
