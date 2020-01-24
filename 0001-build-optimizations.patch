@@ -40,10 +40,10 @@ index 216bc41..3e5d781 100755
 -"$bees_bin" "${ARGUMENTS[@]}" $OPTIONS "$MNT_DIR"
 +LD_LIBRARY_PATH=@PREFIX@/lib64 "$bees_bin" "${ARGUMENTS[@]}" $OPTIONS "$MNT_DIR"
 diff --git a/scripts/beesd@.service.in b/scripts/beesd@.service.in
-index b37273c..5269158 100644
+index b37273c..45de27e 100644
 --- a/scripts/beesd@.service.in
 +++ b/scripts/beesd@.service.in
-@@ -9,16 +9,15 @@ ExecStart=@PREFIX@/sbin/beesd --no-timestamps %i
+@@ -9,16 +9,17 @@ ExecStart=@PREFIX@/sbin/beesd --no-timestamps %i
  CPUAccounting=true
  CPUSchedulingPolicy=batch
  CPUWeight=12
@@ -62,3 +62,6 @@ index b37273c..5269158 100644
  StartupIOWeight=25
 +IOAccounting=true
 +MemoryAccounting=true
+ 
+ [Install]
+ WantedBy=basic.target
