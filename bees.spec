@@ -21,7 +21,6 @@ Patch0001:      0001-build-optimizations.patch
 
 
 %build
-%configure
 %make_build
 
 
