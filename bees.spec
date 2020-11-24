@@ -1,7 +1,7 @@
-%global sha 07e5e7bd1b348eb2d56bc2a7974c3a660081418a
+%global sha 1b9b437c11dd858213c963b14fe7771ab630c2b8
 Name:           bees
-Version:        2019.11.28
-Release:        2%{?dist}
+Version:        2020.10.10
+Release:        1%{?dist}
 Summary:        Best-Effort Extent-Same, a btrfs dedup agent
 
 License:        GPL3
@@ -39,6 +39,9 @@ export SYSTEMD_SYSTEM_UNIT_DIR=/usr/lib/systemd/system
 
 
 %changelog
+* Tue Nov 24 2020 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2020-10-10-1
+- Update version
+
 * Fri Jan 24 2020 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2019.11.28-2
 - rebuilt
 
