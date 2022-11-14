@@ -1,6 +1,6 @@
-%global sha     fbf6b395c830edd7ade1d0042058e94531769962
+%global sha     331cb142e35b0b0fe7efe08dc83280ad3f394d84
 Name:           bees
-Version:        2021.12.19
+Version:        2022.11.5
 Release:        1%{?dist}
 Summary:        Best-Effort Extent-Same, a btrfs dedup agent
 
@@ -39,6 +39,9 @@ export SYSTEMD_SYSTEM_UNIT_DIR=/usr/lib/systemd/system
 
 
 %changelog
+* Mon Nov 14 2022 Piotr Rogowski <piotrekrogowski@gmail.com> - 2022.11.5-1
+- new version
+
 * Fri Apr 15 2022 Piotr Rogowski <piotrekrogowski@gmail.com> - 2021.12.19-1
 - new version
 

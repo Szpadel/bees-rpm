@@ -2,13 +2,15 @@
 %{!?version_no_tilde: %define version_no_tilde %{shrink:%(echo '%{version}' | tr '~' '-')}}
 
 Name:           btrfs-progs
-Version:        5.16.2
+Version:        6.0
 Release:        1%{?dist}
 Summary:        Userspace programs for btrfs
 
 License:        GPLv2
 URL:            https://btrfs.wiki.kernel.org/index.php/Main_Page
 Source0:        https://www.kernel.org/pub/linux/kernel/people/kdave/%{name}/%{name}-v%{version_no_tilde}.tar.xz
+Source1:        https://www.kernel.org/pub/linux/kernel/people/kdave/%{name}/%{name}-v%{version_no_tilde}.tar.sign
+Source2:        gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
 
 BuildRequires:  gnupg2
 BuildRequires:  gcc, autoconf, automake, make
@@ -19,7 +21,7 @@ BuildRequires:  pkgconfig(uuid)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(libzstd) >= 1.0.0
-BuildRequires:  asciidoc, xmlto
+BuildRequires:  python3-sphinx
 BuildRequires:  systemd
 BuildRequires:  python3-devel >= 3.4
 BuildRequires:  python3-setuptools
@@ -83,6 +85,7 @@ You should install python3-btrfsutil if you want to use or develop
 btrfs filesystem-specific programs in Python.
 
 %prep
+xzcat '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
 %autosetup -n %{name}-v%{version_no_tilde} -p1
 
 %build
@@ -142,6 +145,21 @@ popd
 %{python3_sitearch}/btrfsutil-*.egg-info/
 
 %changelog
+* Thu Oct 13 2022 Neal Gompa <ngompa@fedoraproject.org> - 6.0-1
+- Update to 6.0
+
+* Thu Oct 13 2022 Neal Gompa <ngompa@fedoraproject.org> - 5.19.1-1
+- Update to 5.19.1
+
+* Wed Jul 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
+* Mon Jun 13 2022 Python Maint <python-maint@redhat.com> - 5.18-2
+- Rebuilt for Python 3.11
+
+* Wed May 25 2022 Neal Gompa <ngompa@fedoraproject.org> - 5.18-1
+- Update to 5.18
+
 * Wed Feb 16 2022 Neal Gompa <ngompa@fedoraproject.org> - 5.16.2-1
 - Update to 5.16.2
 
