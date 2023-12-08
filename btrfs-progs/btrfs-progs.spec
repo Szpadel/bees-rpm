@@ -2,23 +2,32 @@
 %{!?version_no_tilde: %define version_no_tilde %{shrink:%(echo '%{version}' | tr '~' '-')}}
 
 Name:           btrfs-progs
-Version:        6.6
+Version:        6.6.2
 Release:        1%{?dist}
 Summary:        Userspace programs for btrfs
 
-License:        GPLv2
+License:        GPL-2.0-only
 URL:            https://btrfs.wiki.kernel.org/index.php/Main_Page
 Source0:        https://www.kernel.org/pub/linux/kernel/people/kdave/%{name}/%{name}-v%{version_no_tilde}.tar.xz
 Source1:        https://www.kernel.org/pub/linux/kernel/people/kdave/%{name}/%{name}-v%{version_no_tilde}.tar.sign
 Source2:        gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
 
+# Upstreamable changes
+## From: https://lore.kernel.org/linux-btrfs/20230322221714.2702819-1-neal@gompa.dev/T/#t
+Patch0101:      0001-btrfs-progs-mkfs-Enforce-4k-sectorsize-by-default.patch
+## Fedora specific doc change stacked on top
+Patch0102:      0002-btrfs-progs-mkfs-doc-Drop-version-change-for-4k-sect.patch
+
+
 BuildRequires:  gnupg2
 BuildRequires:  gcc, autoconf, automake, make
+BuildRequires:  git-core
 BuildRequires:  e2fsprogs-devel
 BuildRequires:  libacl-devel, lzo-devel
 BuildRequires:  pkgconfig(blkid)
 BuildRequires:  pkgconfig(uuid)
 BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(libgcrypt) >= 1.8.0
 BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(libzstd) >= 1.0.0
 BuildRequires:  python3-sphinx
@@ -32,7 +41,7 @@ check, modify and correct any inconsistencies in the btrfs filesystem.
 
 %package -n libbtrfs
 Summary:        btrfs filesystem-specific runtime libraries
-License:        GPLv2
+License:        GPL-2.0-only
 # Upstream deprecated this library
 Provides:       deprecated()
 # This was not properly split out before
@@ -44,7 +53,7 @@ filesystem-specific programs.
 
 %package -n libbtrfsutil
 Summary:        btrfs filesystem-specific runtime utility libraries
-License:        LGPLv2+
+License:        LGPL-2.1-or-later
 # This was not properly split out before
 Conflicts:      %{name}-devel < 4.20.2
 
@@ -55,7 +64,7 @@ filesystem-specific programs.
 %package devel
 Summary:        btrfs filesystem-specific libraries and headers
 # libbtrfsutil is LGPLv2+
-License:        GPLv2 and LGPLv2+
+License:        GPL-2.0-only and LGPL-2.1-or-later
 Requires:       %{name} = %{version}-%{release}
 Requires:       libbtrfs%{?_isa} = %{version}-%{release}
 Requires:       libbtrfsutil%{?_isa} = %{version}-%{release}
@@ -73,7 +82,7 @@ btrfs filesystem-specific programs.
 
 %package -n python3-btrfsutil
 Summary:        Python 3 bindings for libbtrfsutil
-License:        LGPLv2+
+License:        LGPL-2.1-or-later
 Requires:       libbtrfsutil%{?_isa} = %{version}-%{release}
 %{?python_provide:%python_provide python3-btrfsutil}
 
@@ -86,11 +95,11 @@ btrfs filesystem-specific programs in Python.
 
 %prep
 xzcat '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
-%autosetup -n %{name}-v%{version_no_tilde} -p1
+%autosetup -n %{name}-v%{version_no_tilde} -S git_am
 
 %build
 ./autogen.sh
-%configure CFLAGS="%{optflags} -fno-strict-aliasing" --disable-python
+%configure CFLAGS="%{optflags} -fno-strict-aliasing" --with-crypto=libgcrypt --disable-python
 %make_build
 
 pushd libbtrfsutil/python
@@ -145,8 +154,64 @@ popd
 %{python3_sitearch}/btrfsutil-*.egg-info/
 
 %changelog
-* Fri Dec 08 2023 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 6.6-1
-- new version
+* Fri Nov 24 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.6.2-1
+- Update to 6.6.2
+
+* Thu Sep 14 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.5.1-1
+- Update to 6.5.1
+
+* Sun Aug 20 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.3.3-1
+- Update to 6.3.3
+
+* Wed Jul 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 6.3.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
+
+* Mon Jun 26 2023 Python Maint <python-maint@redhat.com> - 6.3.2-2
+- Rebuilt for Python 3.12
+
+* Wed Jun 21 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.3.2-1
+- Update to 6.3.2
+
+* Wed Jun 14 2023 Python Maint <python-maint@redhat.com> - 6.3.1-2
+- Rebuilt for Python 3.12
+
+* Tue May 30 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.3.1-1
+- Update to 6.3.1
+
+* Sun Mar 26 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.2.2-1
+- Update to 6.2.2
+
+* Wed Mar 22 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.2.1-2
+- Add patch to force default sectorsize to 4k
+
+* Mon Mar 06 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.2.1-1
+- Update to 6.2.1
+
+* Wed Jan 25 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.1.3-1
+- Update to 6.1.3
+- Switch to SPDX license identifiers
+
+* Wed Jan 18 2023 Fedora Release Engineering <releng@fedoraproject.org> - 6.1.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
+
+* Thu Jan 05 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.1.2-1
+- Update to 6.1.2
+
+* Tue Jan 03 2023 Neal Gompa <ngompa@fedoraproject.org> - 6.1.1-1
+- Update to 6.1.1
+
+* Fri Dec 30 2022 Neal Gompa <ngompa@fedoraproject.org> - 6.1-2
+- Add fix to show UUID with "btrfs subvolume list -u"
+
+* Fri Dec 23 2022 Neal Gompa <ngompa@fedoraproject.org> - 6.1-1
+- Update to 6.1
+- Use libgcrypt for cryptographic hash functions
+
+* Fri Nov 25 2022 Neal Gompa <ngompa@fedoraproject.org> - 6.0.2-1
+- Update to 6.0.2
+
+* Fri Nov 04 2022 Igor Raits <ignatenkobrain@fedoraproject.org> - 6.0.1-1
+- Update to 6.0.1
 
 * Thu Oct 13 2022 Neal Gompa <ngompa@fedoraproject.org> - 6.0-1
 - Update to 6.0
@@ -297,7 +362,7 @@ popd
 * Thu Jul 12 2018 Fedora Release Engineering <releng@fedoraproject.org> - 4.16-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
-* Tue Jun 19 2018 Miro Hrončok <mhroncok@redhat.com> - 4.16-3
+* Tue Jun 19 2018 Miro HronÄ¨ok <mhroncok@redhat.com> - 4.16-3
 - Rebuilt for Python 3.7
 
 * Sun Apr 08 2018 Eric Sandeen <sandeen@redhat.com> 4.16-2

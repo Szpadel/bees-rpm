@@ -1,0 +1,51 @@
+From 692f223b5a152951d38d2dcf9103d28b2185626c Mon Sep 17 00:00:00 2001
+From: Neal Gompa <ngompa@fedoraproject.org>
+Date: Tue, 21 Mar 2023 15:40:15 -0400
+Subject: [PATCH 2/2] btrfs-progs: mkfs: doc: Drop version change for 4k
+ sectorsize
+
+This is not yet upstream so we don't know what version this change
+has landed in.
+---
+ Documentation/Subpage.rst    | 4 ++--
+ Documentation/mkfs.btrfs.rst | 3 ---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/Subpage.rst b/Documentation/Subpage.rst
+index 4bcfc6cf..698085bd 100644
+--- a/Documentation/Subpage.rst
++++ b/Documentation/Subpage.rst
+@@ -9,7 +9,7 @@ to the exactly same size of the block and page. On x86_64 this is typically
+ pages, like 64KiB on 64bit ARM or PowerPC. This means filesystems created
+ with 64KiB sector size cannot be mounted on a system with 4KiB page size.
+
+-Since v6.5, filesystems are created with a 4KiB sectorsize by default,
++Filesystems are created with a 4KiB sectorsize by default,
+ though it remains possible to create filesystems with other page sizes
+ (such as 64KiB with the "-s 64k" option for :command:`mkfs.btrfs`). This
+ ensures that new filesystems are compatible across other architecture
+@@ -21,7 +21,7 @@ Requirements, limitations
+ The initial subpage support has been added in v5.15. Most features are
+ already working without problems. On a 64KiB page system, a filesystem with
+ 4KiB sectorsize can be mounted and used as long as the initial mount succeeds.
+-Subpage support is used by default for systems with a non-4KiB page size since v6.5.
++Subpage support is used by default for systems with a non-4KiB page size.
+
+ Please refer to status page of :ref:`status-subpage-block-size` for
+ compatibility.
+diff --git a/Documentation/mkfs.btrfs.rst b/Documentation/mkfs.btrfs.rst
+index d602fe9c..11ac4af2 100644
+--- a/Documentation/mkfs.btrfs.rst
++++ b/Documentation/mkfs.btrfs.rst
+@@ -129,9 +129,6 @@ OPTIONS
+         advised unless you intend to mount it on a system with the suitable
+         page size.
+
+-        .. note::
+-                Versions prior to 6.4 set the sectorsize matching to the page size.
+-
+ -L|--label <string>
+         Specify a label for the filesystem. The *string* should be less than 256
+         bytes and must not contain newline characters.
+--
+2.41.0

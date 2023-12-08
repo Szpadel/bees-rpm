@@ -1,0 +1,91 @@
+From 4d8199f0e3d30be69ebd10820d5402ec8d326e38 Mon Sep 17 00:00:00 2001
+From: Neal Gompa <neal@gompa.dev>
+Date: Wed, 22 Mar 2023 18:17:14 -0400
+Subject: [PATCH 1/1] btrfs-progs: mkfs: Enforce 4k sectorsize by default
+
+We have had working subpage support in Btrfs for many cycles now.
+Generally, we do not want people creating filesystems by default
+with non-4k sectorsizes since it creates portability problems.
+
+Signed-off-by: Neal Gompa <neal@gompa.dev>
+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+---
+ Documentation/Subpage.rst    | 17 +++++++++--------
+ Documentation/mkfs.btrfs.rst | 13 +++++++++----
+ mkfs/main.c                  |  2 +-
+ 3 files changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/Subpage.rst b/Documentation/Subpage.rst
+index c762b6a3..4bcfc6cf 100644
+--- a/Documentation/Subpage.rst
++++ b/Documentation/Subpage.rst
+@@ -9,18 +9,19 @@ to the exactly same size of the block and page. On x86_64 this is typically
+ pages, like 64KiB on 64bit ARM or PowerPC. This means filesystems created
+ with 64KiB sector size cannot be mounted on a system with 4KiB page size.
+
+-While with subpage support systems with 64KiB page size can create
+-and mount filesystems with 4KiB sectorsize.  This still needs to use option "-s
+-4k" option for :command:`mkfs.btrfs`.
++Since v6.5, filesystems are created with a 4KiB sectorsize by default,
++though it remains possible to create filesystems with other page sizes
++(such as 64KiB with the "-s 64k" option for :command:`mkfs.btrfs`). This
++ensures that new filesystems are compatible across other architecture
++variants using larger page sizes.
+
+ Requirements, limitations
+ -------------------------
+
+-The initial subpage support has been added in v5.15, although it's still
+-considered as experimental, most features are already working without problems.
+-On a 64KiB page system filesystem with 4KiB sectorsize can be mounted and used
+-as usual as long as the initial mount succeeds. There are cases a mount will be
+-rejected when verifying compatible features.
++The initial subpage support has been added in v5.15. Most features are
++already working without problems. On a 64KiB page system, a filesystem with
++4KiB sectorsize can be mounted and used as long as the initial mount succeeds.
++Subpage support is used by default for systems with a non-4KiB page size since v6.5.
+
+ Please refer to status page of :ref:`status-subpage-block-size` for
+ compatibility.
+diff --git a/Documentation/mkfs.btrfs.rst b/Documentation/mkfs.btrfs.rst
+index 1fca7448..d602fe9c 100644
+--- a/Documentation/mkfs.btrfs.rst
++++ b/Documentation/mkfs.btrfs.rst
+@@ -122,10 +122,15 @@ OPTIONS
+ -s|--sectorsize <size>
+         Specify the sectorsize, the minimum data block allocation unit.
+
+-        The default value is the page size and is autodetected. If the sectorsize
+-        differs from the page size, the created filesystem may not be mountable by the
+-        running kernel. Therefore it is not recommended to use this option unless you
+-        are going to mount it on a system with the appropriate page size.
++        By default, the value is 4KiB, but it can be manually set to match the
++        system page size. However, if the sector size is different from the page
++        size, the resulting filesystem may not be mountable by the current
++        kernel, apart from the default 4KiB. Hence, using this option is not
++        advised unless you intend to mount it on a system with the suitable
++        page size.
++
++        .. note::
++                Versions prior to 6.4 set the sectorsize matching to the page size.
+
+ -L|--label <string>
+         Specify a label for the filesystem. The *string* should be less than 256
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 1c5d668e..bd2e4350 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1204,7 +1204,7 @@ int BOX_MAIN(mkfs)(int argc, char **argv)
+ 	}
+
+ 	if (!sectorsize)
+-		sectorsize = (u32)sysconf(_SC_PAGESIZE);
++		sectorsize = (u32)SZ_4K;
+ 	if (btrfs_check_sectorsize(sectorsize))
+ 		goto error;
+
+--
+2.41.0
