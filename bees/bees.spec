@@ -1,7 +1,7 @@
 %global sha     124507232fe5682c8b6ebe80632c33eccefa8e29
 Name:           bees
 Version:        2023.7.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Best-Effort Extent-Same, a btrfs dedup agent
 
 License:        GPL3
@@ -12,6 +12,7 @@ BuildRequires:  make automake gcc gcc-c++ kernel-devel discount libuuid-devel bt
 Requires:       libuuid btrfs-progs
 
 Patch0001:      0001-build-optimizations.patch
+Patch0002:      0002-Reduce-extents-buffer-size-as-mitigation-for-260.patch
 
 %description
 
@@ -39,6 +40,9 @@ export SYSTEMD_SYSTEM_UNIT_DIR=/usr/lib/systemd/system
 
 
 %changelog
+* Fri Dec 08 2023 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2023.7.6-2
+- rebuilt
+
 * Fri Dec 08 2023 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2023.7.6-1
 - new version
 

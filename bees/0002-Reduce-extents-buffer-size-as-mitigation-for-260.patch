@@ -1,0 +1,25 @@
+From de895f24ad54cbe795e639398f5841a3a729ec08 Mon Sep 17 00:00:00 2001
+From: Piotr Rogowski <piotr.rogowski@creativestyle.pl>
+Date: Fri, 8 Dec 2023 17:19:38 +0100
+Subject: [PATCH] Reduce extents buffer size as mitigation for #260
+
+---
+ include/crucible/fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/crucible/fs.h b/include/crucible/fs.h
+index 6d1780b..70c48af 100644
+--- a/include/crucible/fs.h
++++ b/include/crucible/fs.h
+@@ -65,7 +65,7 @@ namespace crucible {
+ 	};
+ 
+ 	struct BtrfsIoctlLogicalInoArgs {
+-		BtrfsIoctlLogicalInoArgs(uint64_t logical, size_t buf_size = 16 * 1024 * 1024);
++		BtrfsIoctlLogicalInoArgs(uint64_t logical, size_t buf_size = 128 * 1024);
+ 
+ 		uint64_t get_flags() const;
+ 		void set_flags(uint64_t new_flags);
+-- 
+2.43.0
+
