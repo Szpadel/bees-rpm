@@ -1,7 +1,7 @@
-%global sha     124507232fe5682c8b6ebe80632c33eccefa8e29
+%global sha     75131f396f730a1163e91c0530f1fc745ef9e5a4
 Name:           bees
-Version:        2023.7.6
-Release:        2%{?dist}
+Version:        2024.4.18
+Release:        1%{?dist}
 Summary:        Best-Effort Extent-Same, a btrfs dedup agent
 
 License:        GPL3
@@ -40,6 +40,9 @@ export SYSTEMD_SYSTEM_UNIT_DIR=/usr/lib/systemd/system
 
 
 %changelog
+* Wed Jun 05 2024 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2024.4.18-1
+- rebuilt
+
 * Fri Dec 08 2023 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2023.7.6-2
 - rebuilt
 
