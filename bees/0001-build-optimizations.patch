@@ -9,7 +9,7 @@ index c5b6951..76194f7 100644
 
  # Optimized:
 -# CCFLAGS = -Wall -Wextra -Werror -O3 -march=native
-+CCFLAGS = -Wall -Wextra -Werror -O3 -march=x86-64-v3 -fipa-pta -flto=4 -fno-common -fuse-linker-plugin -g
++CCFLAGS = -Wall -Wextra -O3 -march=x86-64-v3 -fipa-pta -flto=4 -fno-common -fuse-linker-plugin -g
 +LDFLAGS = $(CCFLAGS)
 +AR=gcc-ar
 +NM=gcc-nm
